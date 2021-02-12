@@ -12,5 +12,7 @@ export default {
   dbName: 'reddit-clone',
   type: 'postgresql',
   debug: !__prod__,
+  user: 'howakyl'
+
 } as Parameters<typeof MikroORM.init>[0];
 
