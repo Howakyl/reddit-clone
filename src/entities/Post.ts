@@ -20,3 +20,5 @@ export class Post {
   @Property({type: "text"})
   title!: string;
 }
+
+// you can comment out Fields() if you don't want to expose that data on your grapql api
