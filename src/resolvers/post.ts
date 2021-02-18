@@ -42,4 +42,18 @@ export class PostResolver {
       }
     return post;
   }
+
+  // this will return a boolean to determine whether the post was deleted or not
+  @Mutation(() => Boolean)
+  async deletePost(
+    @Arg('id') id: number,
+    @Ctx() {em}: MyContext
+    ): Promise<boolean> {
+      try {
+        await em.nativeDelete(Post, { id });
+      } catch {
+        return false;
+      }
+      return true;
+  }
 }
