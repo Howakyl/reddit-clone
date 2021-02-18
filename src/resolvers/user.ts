@@ -23,6 +23,7 @@ export class UserResolver {
   // creates user in database, then saves user to db
   @Mutation(() => User)
   async register(
+    // @Arg('options, () => UsernamePasswordInput) options: UsernamePasswordInput    ---- this is the explicit typing way
     @Arg('options') options: UsernamePasswordInput,
     @Ctx() { em }: MyContext
   ) {
