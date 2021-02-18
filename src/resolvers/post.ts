@@ -24,7 +24,7 @@ export class PostResolver {
   }
 
 
-  // CREATE POST
+  // CREATE POST 
   // takes in one argument, the title, which is created to then make a post
   // returns a promise, which creates a Post in Post table, and the title string
   // saves to database the new post
