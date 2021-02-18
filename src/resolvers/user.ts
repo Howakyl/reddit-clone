@@ -1,4 +1,5 @@
-import { User } from 'src/entities/User';
+import { User } from '../entities/User';
+// MAKE SURE IMPORTS ARE USING RELATIVE PATHS ^^^
 import { MyContext } from 'src/types';
 import { Resolver, Mutation, Arg, InputType, Field, Ctx } from 'type-graphql';
 import argon2 from 'argon2';
@@ -20,7 +21,7 @@ export class UserResolver {
   // CREATE USER
   // takes in options object as argument, which is username and pass
   // creates user in database, then saves user to db
-  @Mutation(() => String)
+  @Mutation(() => User)
   async register(
     @Arg('options') options: UsernamePasswordInput,
     @Ctx() { em }: MyContext
