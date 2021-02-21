@@ -8,20 +8,10 @@ import {buildSchema} from 'type-graphql';
 import { HelloResolver } from "./resolvers/hello";
 import { PostResolver } from "./resolvers/post";
 import { UserResolver } from "./resolvers/user";
+import redis from 'redis';
+import session from 'express-session';
+import connectRedis from 'connect-redis';
 
-const redis = require('redis');
-const session = require('express-session');
-
-let RedisStore = require('connect-redis')(session)
-let RedisClient = redis.createClient()
-
-app.use(
-  session({
-    store: new RedisStore({ client: redisClient }),
-    secret: 'keyboard cat',
-    resave: false,
-  })
-)
 
 const main = async () => {
   const orm = await MikroORM.init(microConfig);
@@ -30,6 +20,17 @@ const main = async () => {
 
   const PORT = 4000;
   const app = express();
+
+  const RedisStore = connectRedis(session)
+  const redisClient = redis.createClient()
+
+  app.use(
+    session({
+      store: new RedisStore({ client: redisClient }),
+      secret: 'keyboard cat',
+      resave: false,
+    })
+  )
   
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
