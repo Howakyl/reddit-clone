@@ -38,14 +38,17 @@ class UserResponse {
 export class UserResolver {
 
   //ALL USERS
+  /////////////////
   @Query(() => [User])
   users(@Ctx() {em}: MyContext): Promise<User[]> {
     return em.find(User, {});
   }
 
   // CREATE USER
+  /////////////////
   // takes in options object as argument, which is username and pass
   // creates user in database, then saves user to db
+
   @Mutation(() => UserResponse)
   async register(
     // @Arg('options', () => UsernamePasswordInput) options: UsernamePasswordInput    ---- this is the explicit typing way
@@ -80,10 +83,27 @@ export class UserResolver {
       username: options.username, 
       password: hashedPassword
     });
-    await em.persistAndFlush(user);
+    try {
+      await em.persistAndFlush(user);
+    } catch (err) {
+      // duplicate username error
+      if (err.code === '23505' || err.detail.includes('already exists')) {
+        return {
+          errors: [
+            {
+              field: "username",
+              message: "user already exists"
+            },
+          ],
+        }
+      }
+      console.log('message', err.message);
+    }
     return {user};
   }
 
+
+  // LOGIN USER
   @Mutation(() => UserResponse)
   async login(
     @Arg('options') options: UsernamePasswordInput,
