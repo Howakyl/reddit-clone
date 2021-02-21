@@ -46,12 +46,34 @@ export class UserResolver {
   // CREATE USER
   // takes in options object as argument, which is username and pass
   // creates user in database, then saves user to db
-  @Mutation(() => User)
+  @Mutation(() => UserResponse)
   async register(
     // @Arg('options', () => UsernamePasswordInput) options: UsernamePasswordInput    ---- this is the explicit typing way
     @Arg('options') options: UsernamePasswordInput,
     @Ctx() { em }: MyContext
-  ) {
+  ): Promise<UserResponse> {
+    if (options.username.length <= 2) {
+      return {
+        errors: [
+          {
+          field: "username",
+          message: "username must be greater than 2 characters"
+        },
+      ]
+      }
+    }
+
+    if (options.password.length <= 3) {
+      return {
+        errors: [
+          {
+          field: "password",
+          message: "password length must be greater than 3 characters"
+        },
+      ]
+      }
+    }
+
     const hashedPassword = await argon2.hash(options.password)
     // creates user with username, and hashed password from argon2
     const user = em.create(User, {
@@ -59,7 +81,7 @@ export class UserResolver {
       password: hashedPassword
     });
     await em.persistAndFlush(user);
-    return user;
+    return {user};
   }
 
   @Mutation(() => UserResponse)
