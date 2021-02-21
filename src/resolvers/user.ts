@@ -1,7 +1,7 @@
 import { User } from '../entities/User';
 // MAKE SURE IMPORTS ARE USING RELATIVE PATHS ^^^
 import { MyContext } from 'src/types';
-import { Resolver, Mutation, Arg, InputType, Field, Ctx } from 'type-graphql';
+import { Resolver, Mutation, Arg, InputType, Field, Ctx, Query } from 'type-graphql';
 import argon2 from 'argon2';
 
 // this is an alternative to making multiple Arg() decorators
@@ -18,12 +18,18 @@ class UsernamePasswordInput {
 @Resolver()
 export class UserResolver {
 
+  //ALL USERS
+  @Query(() => [User])
+  users(@Ctx() {em}: MyContext): Promise<User[]> {
+    return em.find(User, {});
+  }
+
   // CREATE USER
   // takes in options object as argument, which is username and pass
   // creates user in database, then saves user to db
   @Mutation(() => User)
   async register(
-    // @Arg('options, () => UsernamePasswordInput) options: UsernamePasswordInput    ---- this is the explicit typing way
+    // @Arg('options', () => UsernamePasswordInput) options: UsernamePasswordInput    ---- this is the explicit typing way
     @Arg('options') options: UsernamePasswordInput,
     @Ctx() { em }: MyContext
   ) {
