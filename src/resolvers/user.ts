@@ -97,7 +97,6 @@ export class UserResolver {
           ],
         }
       }
-      console.log('message', err.message);
     }
     return {user};
   }
