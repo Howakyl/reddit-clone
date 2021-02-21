@@ -27,8 +27,8 @@ class FieldError {
 // returns either an error or a User, both of which can be null, and optional as indicated by ?.
 @ObjectType()
 class UserResponse {
-  @Field(() => [Error], {nullable: true})
-  errors?: Error[]
+  @Field(() => [FieldError], {nullable: true})
+  errors?: FieldError[]
 
   @Field(() => User, {nullable: true})
   user?: User
@@ -62,17 +62,33 @@ export class UserResolver {
     return user;
   }
 
-  @Mutation(() => User)
+  @Mutation(() => UserResponse)
   async login(
     @Arg('options') options: UsernamePasswordInput,
     @Ctx() { em }: MyContext
-  ) {
+  ): Promise<UserResponse> {
     const user = await em.findOne(User, {username: options.username});
     if (!user) {
       return {
-        errors: [{}]
+        errors: [
+          {
+          field: 'username',
+          message: "that username doesn't exist"
+        },
+      ],
       }
     }
-    return user;
+    const valid = await argon2.verify(user.password, options.password)
+    if (!valid) {
+      return {
+        errors: [
+          {
+          field: "password",
+          message: "incorrect password"
+        },
+      ],
+      }
+    }
+    return {user};
   }
 }
