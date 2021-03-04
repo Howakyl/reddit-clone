@@ -31,6 +31,12 @@ const main = async () => {
         client: redisClient,
         disableTouch: true,
       }),
+      cookie: {
+        maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year
+        httpOnly: true, // this will make cookie unaccessible in js frontend code
+        sameSite: 'lax', // csrf setting
+        secure: __prod__, // cookie will only work in https, not development
+      },
       secret: 'sdfljn2349sldkjalqwjeoijxkn2354ii2nma1',
       // make this ^ ENV
       resave: false,
