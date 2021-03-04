@@ -26,8 +26,13 @@ const main = async () => {
 
   app.use(
     session({
-      store: new RedisStore({ client: redisClient }),
-      secret: 'keyboard cat',
+      name: 'qid',
+      store: new RedisStore({ 
+        client: redisClient,
+        disableTouch: true,
+      }),
+      secret: 'sdfljn2349sldkjalqwjeoijxkn2354ii2nma1',
+      // make this ^ ENV
       resave: false,
     })
   )
