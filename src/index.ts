@@ -22,8 +22,8 @@ const main = async () => {
   const PORT = 4000;
   const app = express();
 
-  const RedisStore = connectRedis(session)
-  const redisClient = redis.createClient()
+  const RedisStore = connectRedis(session);
+  const redisClient = redis.createClient();
 
   app.use(
     session({
@@ -38,6 +38,7 @@ const main = async () => {
         sameSite: 'lax', // csrf setting
         secure: __prod__, // cookie will only work in https, not development
       },
+      saveUninitialized: false,
       secret: 'sdfljn2349sldkjalqwjeoijxkn2354ii2nma1',
       // make this ^ ENV
       resave: false,
