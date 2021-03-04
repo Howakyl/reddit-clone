@@ -36,7 +36,7 @@ class UserResponse {
 
 @Resolver()
 export class UserResolver {
-  
+
   @Query(() => User, {nullable: true})
   async me(@Ctx() { req, em }: MyContext) {
     // you are not logged in
@@ -62,7 +62,7 @@ export class UserResolver {
   async register(
     // @Arg('options', () => UsernamePasswordInput) options: UsernamePasswordInput    ---- this is the explicit typing way
     @Arg('options') options: UsernamePasswordInput,
-    @Ctx() { em }: MyContext
+    @Ctx() { em, req }: MyContext
   ): Promise<UserResponse> {
     if (options.username.length <= 2) {
       return {
@@ -107,6 +107,11 @@ export class UserResolver {
         }
       }
     }
+
+    // store user id session
+    // logs you in upon registering and keeps you logged in
+    req.session.userId = user.id;
+
     return {user};
   }
 
