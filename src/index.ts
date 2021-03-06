@@ -13,6 +13,8 @@ import session from 'express-session';
 import connectRedis from 'connect-redis';
 import { MyContext } from "./types";
 
+// ~/Downloads/redis-6.0.10/src/redis-server TO START REDIS // 
+
 
 const main = async () => {
   const orm = await MikroORM.init(microConfig);
@@ -53,7 +55,10 @@ const main = async () => {
     context: ({req, res}): MyContext => ({ em: orm.em, req, res })
   });
 
-  apolloServer.applyMiddleware({ app });
+  apolloServer.applyMiddleware({ 
+    app, 
+    cors: { origin: "http://localhost:3000" },
+  });
 
   app.listen(PORT, () => {
     console.log(`server started on Port:${PORT}`)
