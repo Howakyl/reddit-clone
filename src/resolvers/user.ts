@@ -104,7 +104,7 @@ export class UserResolver {
         .returning("*");
       user = result[0];
     } catch (err) {
-      console.log(err)
+      // console.log(err)
       // duplicate username error
       if (err.code === '23505' || err.detail.includes('already exists')) {
         return {
